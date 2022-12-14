@@ -372,6 +372,10 @@ https://github.com/jcs-elpa/company-emojify/tree/4889398d525aca1971f9a5e213759d5
 
 ;; selected text is overwritten by the text we type
 (delete-selection-mode 1)
+
+;; Cycle spaces
+(global-set-key (kbd "M-SPC") 'cycle-spacing)
+
 #+end_src
 *** COMMENT face-remap+
 
@@ -458,6 +462,7 @@ Keeps code indented . (always)
          ("M-7". eyebrowse-switch-to-window-config-7)
          ("M-8". eyebrowse-switch-to-window-config-8)
          ("M-9". eyebrowse-switch-to-window-config-9)
+         ("M-0". eyebrowse-switch-to-window-config)
          )
   :config
   (setq eyebrowse-switch-back-and-forth t)
@@ -1005,14 +1010,16 @@ https://github.com/meow-edit/meow
 
 #+end_src
 
-** COMMENT recent
+** recent
 *** recentf
 
 #+begin_src emacs-lisp 
-  (setq recentf-max-saved-items 5000
-        recentf-max-menu-items 100)
-  (setq-default recentf-save-file "~/.emacs.d/recentf")
-  (recentf-mode 1)
+(setq recentf-max-saved-items 5000
+      recentf-max-menu-items 100)
+(setq-default recentf-save-file "~/.emacs.d/recentf")
+;; save recentf-list every 5 minutes
+(run-at-time nil (* 5 60) 'recentf-save-list)
+(recentf-mode 1)
 #+end_src
 
 *** recentf-ext
@@ -1598,7 +1605,7 @@ https://github.com/DamienCassou/json-navigator/tree/afd902e0b5cde37fad4786515a69
 #+begin_src emacs-lisp :lexical no
 (use-package json-mode)
 
-(use-package json-navigator)
+;;(use-package json-navigator)
 #+end_src
 
 ** restclient
@@ -2160,6 +2167,7 @@ or to enter 0 to bail"
           (lispworks ("ros" "-Q" "-L" "lispworks" "run"))))
 
   (require 'sly-cl-indent (concat (getenv "HOME") "/.emacs.d/straight/repos/sly/lib/sly-cl-indent.el"))
+  ;; To have Sly perform the indentation in the preferred style for Common Lisp code
   (setq sly-default-lisp 'sbcl))
 
 
@@ -2531,6 +2539,7 @@ https://www.antlr.org/index.html
 - Install =java= (jdk)
 *** Maven
 https://maven.apache.org/guides/getting-started/index.html
+https://spring.io/guides/gs/maven/
 - Install =maven=
 **** mvn-el
 https://github.com/apg/mvn-el
@@ -2985,7 +2994,7 @@ https://github.com/thisch/python-cell.el/tree/master
 (use-package python-cell)
 #+end_src
 
-** COMMENT Scheme
+** Scheme
 *** geiser
 
 #+begin_src emacs-lisp
@@ -2995,7 +3004,7 @@ https://github.com/thisch/python-cell.el/tree/master
 
   (use-package geiser-guile
     :config
-    ;;(setq geiser-guile-binary "/home/nabeel/.guix-profile/bin/guile")
+    ;;(setq geiser-guile-binary "~/.guix-profile/bin/guile")
     )
 
   ;; (use-package geiser-racket) 
@@ -3003,6 +3012,15 @@ https://github.com/thisch/python-cell.el/tree/master
 #+end_src
     
 *** racket
+Install =racket=.
+After installing 'racket', the following programs will also be made available:
+- =raco=
+- =drracket=
+#+CAPTION: If not installed then
+  #+begin_src shell
+  raco pkg install --auto drracket
+  #+end_src
+
 https://racket-mode.com/#racket_002dmode_002dstart_002dfaster
 
 use =M-x racket-mode-start-faster= after installing each new racket version.

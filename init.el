@@ -208,6 +208,9 @@
 ;; selected text is overwritten by the text we type
 (delete-selection-mode 1)
 
+;; Cycle spaces
+(global-set-key (kbd "M-SPC") 'cycle-spacing)
+
 (use-package smartparens
   :hook ((org-mode . smartparens-mode))
   :config
@@ -257,6 +260,7 @@
          ("M-7". eyebrowse-switch-to-window-config-7)
          ("M-8". eyebrowse-switch-to-window-config-8)
          ("M-9". eyebrowse-switch-to-window-config-9)
+         ("M-0". eyebrowse-switch-to-window-config)
          )
   :config
   (setq eyebrowse-switch-back-and-forth t)
@@ -550,6 +554,15 @@ If a selection is active, pre-fill the prompt with it."
   :config
   (general-auto-unbind-keys 1))
 
+(setq recentf-max-saved-items 5000
+      recentf-max-menu-items 100)
+(setq-default recentf-save-file "~/.emacs.d/recentf")
+;; save recentf-list every 5 minutes
+(run-at-time nil (* 5 60) 'recentf-save-list)
+(recentf-mode 1)
+
+(use-package recentf-ext)
+
 (use-package hydra
   :ensure t)
 
@@ -807,7 +820,7 @@ Version 2017-11-10"
 
 (use-package json-mode)
 
-(use-package json-navigator)
+;;(use-package json-navigator)
 
 (use-package restclient
   :mode (("\\.http\\'" . restclient-mode))
@@ -956,6 +969,7 @@ Version 2017-11-10"
           (lispworks ("ros" "-Q" "-L" "lispworks" "run"))))
 
   (require 'sly-cl-indent (concat (getenv "HOME") "/.emacs.d/straight/repos/sly/lib/sly-cl-indent.el"))
+  ;; To have Sly perform the indentation in the preferred style for Common Lisp code
   (setq sly-default-lisp 'sbcl))
 
 
@@ -1183,6 +1197,25 @@ Version 2017-11-10"
   :hook ((python-mode . yapf-mode)))
 
 (use-package python-cell)
+
+(use-package geiser
+  :config
+  (setq geiser-active-implementations '(guile)))
+
+(use-package geiser-guile
+  :config
+  ;;(setq geiser-guile-binary "~/.guix-profile/bin/guile")
+  )
+
+;; (use-package geiser-racket)
+
+(use-package racket-mode
+  :mode ("\\.rkt\\'" . racket-mode)
+  :bind (:map racket-mode-map
+              ("C-c C-p" . racket-cycle-paren-shapes))
+  :config
+  (add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
+  (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable))
 
 (use-package org
   :hook ((org-mode . variable-pitch-mode)
